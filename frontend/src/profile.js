@@ -3,7 +3,7 @@ import { getUserInfo, getUserDetails } from "./channel.js";
 import http from "./request.js";
 import { toast } from "./toast.js";
 
-export function generateMyProfile() {
+export const generateMyProfile = () => {
   const profileEditBox = document.querySelector(
     ".profile-body-item.profile-edit-block"
   );
@@ -33,9 +33,9 @@ export function generateMyProfile() {
         "./assets/default_avatar.svg";
     }
   });
-}
+};
 
-function togglePasswordVisibility() {
+const togglePasswordVisibility = () => {
   const passwordField = document.getElementById("userPassword");
   const confirmPasswordField = document.getElementById("confirmUserPassword");
 
@@ -46,9 +46,9 @@ function togglePasswordVisibility() {
     passwordField.type = "password";
     confirmPasswordField.type = "password";
   }
-}
+};
 
-function submitProfileForm() {
+const submitProfileForm = () => {
   const originalUserInfo = getUserInfo();
 
   const newUserData = {
@@ -79,19 +79,19 @@ function submitProfileForm() {
   } else {
     updateUserData(newUserData);
   }
-}
+};
 
-function updateUserData(data) {
+const updateUserData = (data) => {
   http.put("/user", data).then(() => {
     toast("Profile updated successfully!", "success");
     window.location.href = "#profile";
     window.location.reload(true);
   });
-}
+};
 
 const editProfileBtn = document.getElementById("edit-profile");
 
-editProfileBtn.addEventListener("click", function () {
+editProfileBtn.addEventListener("click", () => {
   window.location.href = "#profile";
 });
 
@@ -105,12 +105,12 @@ document
 
 const backToChannelsElement = document.getElementById("back-to-channels");
 
-backToChannelsElement.addEventListener("click", function () {
+backToChannelsElement.addEventListener("click", () => {
   window.location.href = "#channel";
 });
 
 const signoutDom = document.getElementById("signout-profile");
-signoutDom.addEventListener("click", function () {
+signoutDom.addEventListener("click", () => {
   const isConfirmed = confirm(
     "Are you sure you want to log out of your current account?"
   );
@@ -126,7 +126,7 @@ signoutDom.addEventListener("click", function () {
 });
 
 const toRegister = document.getElementById("register-profile");
-toRegister.addEventListener("click", function () {
+toRegister.addEventListener("click", () => {
   const isConfirmed = confirm(
     "Are you sure you want to sign out of your existing account and proceed to the registration page?"
   );
@@ -141,7 +141,7 @@ toRegister.addEventListener("click", function () {
   });
 });
 
-export function generateUserProfile(userId) {
+export const generateUserProfile = (userId) => {
   const profileEditBox = document.querySelector(
     ".profile-body-item.profile-edit-block"
   );
@@ -161,7 +161,7 @@ export function generateUserProfile(userId) {
   });
   getUserDetails(userId).then((userData) => {
     const titleDiv = document.getElementById("spec-user-title");
-    titleDiv.textContent = `${userData.name}'s`
+    titleDiv.textContent = `${userData.name}'s`;
     const userNameDiv = document.getElementById("spec-user-name");
     userNameDiv.textContent = userData.name;
 
@@ -179,4 +179,4 @@ export function generateUserProfile(userId) {
       ? userData.image
       : "./assets/default_avatar.svg";
   });
-}
+};

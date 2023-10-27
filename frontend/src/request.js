@@ -4,7 +4,7 @@ import { toast } from "./toast.js";
 
 const BASE_URL = "http://localhost:5005";
 
-function getHeaders() {
+const getHeaders = () => {
   const token = localStorage.getItem("token");
   return token
     ? {
@@ -14,27 +14,27 @@ function getHeaders() {
     : {
         "Content-Type": "application/json",
       };
-}
+};
 
-function handleResponse(response) {
+const handleResponse = (response) => {
   return response.json().then((data) => {
     if (!response.ok) {
       throw new Error(data.error || "Server error");
     }
     return data;
   });
-}
+};
 
-function get(url) {
+const get = (url) => {
   return fetch(`${BASE_URL}${url}`, {
     method: "GET",
     headers: getHeaders(),
   })
     .then(handleResponse)
     .catch((err) => toast(err.message, "error"));
-}
+};
 
-function post(url, data) {
+const post = (url, data) => {
   return fetch(`${BASE_URL}${url}`, {
     method: "POST",
     headers: getHeaders(),
@@ -42,9 +42,9 @@ function post(url, data) {
   })
     .then(handleResponse)
     .catch((err) => toast(err.message, "error"));
-}
+};
 
-function put(url, data) {
+const put = (url, data) => {
   return fetch(`${BASE_URL}${url}`, {
     method: "PUT",
     headers: getHeaders(),
@@ -52,16 +52,16 @@ function put(url, data) {
   })
     .then(handleResponse)
     .catch((err) => toast(err.message, "error"));
-}
+};
 
-function deleteRequest(url) {
+const deleteRequest = (url) => {
   return fetch(`${BASE_URL}${url}`, {
     method: "DELETE",
     headers: getHeaders(),
   })
     .then(handleResponse)
     .catch((err) => toast(err.message, "error"));
-}
+};
 
 const http = {
   get,
@@ -70,7 +70,7 @@ const http = {
   deleteRequest,
 };
 
-export function fetchUserInfo(userId) {
+export const fetchUserInfo = (userId) => {
   http.get(`/user/${userId}`).then((res) => {
     const userInfo = {
       ...res,
@@ -78,6 +78,6 @@ export function fetchUserInfo(userId) {
     };
     localStorage.setItem("userInfo", JSON.stringify(userInfo));
   });
-}
+};
 
 export default http;

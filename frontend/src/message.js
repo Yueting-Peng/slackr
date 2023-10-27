@@ -10,7 +10,7 @@ import {
 import { fileToDataUrl } from "./helpers.js";
 import { clearDom } from "./main.js";
 
-function getLatestTimestamp(message) {
+const getLatestTimestamp = (message) => {
   if (!message.editedAt && !message.sentAt) {
     return null;
   }
@@ -19,9 +19,9 @@ function getLatestTimestamp(message) {
   }
 
   return "Edited at: " + formatDateToUserFriendly(message.editedAt);
-}
+};
 
-function timeAgo(timestamp) {
+const timeAgo = (timestamp) => {
   const currentTime = new Date();
   const time = new Date(timestamp);
 
@@ -40,9 +40,9 @@ function timeAgo(timestamp) {
   if (weeks < 4) return `${weeks} weeks ago`;
   if (months < 12) return `${months} months ago`;
   return `${years} years ago`;
-}
+};
 
-function createEmptyMessageElement() {
+const createEmptyMessageElement = () => {
   const emptyDom = document.createElement("div");
   const emptyLogo = document.createElement("img");
   emptyLogo.src = "./assets/chat-fill.svg";
@@ -51,10 +51,10 @@ function createEmptyMessageElement() {
   emptyDom.innerText = "No Message";
   emptyDom.appendChild(emptyLogo);
   return emptyDom;
-}
+};
 
 //left block is user img
-function createUserImageElement(senderDetails, senderId) {
+const createUserImageElement = (senderDetails, senderId) => {
   const messageLeftDom = document.createElement("div");
   messageLeftDom.className = "message-left-dom";
   messageLeftDom.setAttribute("sender-id", senderId);
@@ -82,10 +82,10 @@ function createUserImageElement(senderDetails, senderId) {
       });
   }
   return messageLeftDom;
-}
+};
 
 //right: header:(name, time)
-function createRightDomHeader(item, senderDetails) {
+const createRightDomHeader = (item, senderDetails) => {
   const msgRightDomHeader = document.createElement("div");
   msgRightDomHeader.className = "msg-right-header";
 
@@ -102,10 +102,10 @@ function createRightDomHeader(item, senderDetails) {
   msgRightDomHeader.appendChild(reactContainer);
 
   return msgRightDomHeader;
-}
+};
 
 //right: body:(msg contents with two icons)
-function createMsgRightBody(item, senderDetails) {
+const createMsgRightBody = (item, senderDetails) => {
   const messageContentDom = document.createElement("div");
   messageContentDom.className = "right-msg-content-dom";
 
@@ -152,9 +152,9 @@ function createMsgRightBody(item, senderDetails) {
   messageContentDom.appendChild(messageFooterDom);
 
   return messageContentDom;
-}
+};
 
-function createMsgReact(item) {
+const createMsgReact = (item) => {
   const reactContainer = document.createElement("div");
   reactContainer.className = "react-container";
 
@@ -212,9 +212,9 @@ function createMsgReact(item) {
   reactContainer.appendChild(pinMsg);
 
   return reactContainer;
-}
+};
 
-function createRightMsgDom(item, senderDetails) {
+const createRightMsgDom = (item, senderDetails) => {
   const messageRightDom = document.createElement("div");
   messageRightDom.className = "message-right-box";
 
@@ -225,9 +225,9 @@ function createRightMsgDom(item, senderDetails) {
   messageRightDom.appendChild(bodyElement);
 
   return messageRightDom;
-}
+};
 
-export function fetchChannelMessage(channelId) {
+export const fetchChannelMessage = (channelId) => {
   window.__CHANNEL_MESSAGE_LOADED__ = false;
   const messageListEle = document.getElementById("message-list");
   if (window.__MESSAGE_START__ === 0) {
@@ -252,9 +252,9 @@ export function fetchChannelMessage(channelId) {
               error instanceof DOMException &&
               error.name === "QuotaExceededError"
             ) {
-              toast(
+              console.error(
                 "Local storage reached its limit; can't store more messages for offline use!",
-                "error"
+                error
               );
             } else {
               console.error(
@@ -311,8 +311,8 @@ export function fetchChannelMessage(channelId) {
       }
       window.__CHANNEL_MESSAGE_LOADED__ = true;
     });
-}
-export function showCachedChannelMessage() {
+};
+export const showCachedChannelMessage = () => {
   const messageListEle = document.getElementById("message-list");
   const messages = JSON.parse(localStorage.getItem("channelMessages"));
   if (messages && messages.length) {
@@ -360,7 +360,7 @@ export function showCachedChannelMessage() {
       "error"
     );
   }
-}
+};
 
 const messageTextarea = document.getElementById("message-textarea");
 const showEmojiPicker = document.getElementById("showEmojiPicker");
@@ -394,14 +394,14 @@ document.addEventListener("click", (event) => {
 });
 const messageTypeSelector = document.getElementById("messageTypeSelector");
 
-messageTypeSelector.onchange = function () {
+messageTypeSelector.onchange = () => {
   currentMessageType = messageTypeSelector.value;
   toggleMessageType();
 };
 
 const messagesContainer = document.querySelector("#message-list");
 let currentMessageType = "";
-messagesContainer.addEventListener("click", function (event) {
+messagesContainer.addEventListener("click", (event) => {
   if (event.target.classList.contains("msg-delete-icon")) {
     handleDeleteClick(event.target);
   } else if (event.target.classList.contains("msg-edit-icon")) {
@@ -411,7 +411,7 @@ messagesContainer.addEventListener("click", function (event) {
   }
 });
 
-function handleDeleteClick(icon) {
+const handleDeleteClick = (icon) => {
   const isConfirmed = confirm("Are you sure you want to delete this message?");
   if (!isConfirmed) return;
 
@@ -423,9 +423,9 @@ function handleDeleteClick(icon) {
     window.__MESSAGE_START__ = 0;
     fetchChannelMessage(channelId);
   });
-}
+};
 
-function handleEditClick(icon) {
+const handleEditClick = (icon) => {
   const messageId = icon.getAttribute("editable-msg-id");
   const messageBlock = icon.closest(".message-block");
 
@@ -439,17 +439,17 @@ function handleEditClick(icon) {
   toggleMessageType();
 
   showModalAndSetupSave(messageId, messageBlock);
-}
+};
 
-function handleEditText(messageBlock) {
+const handleEditText = (messageBlock) => {
   currentMessageType = "text";
   const textArea = document.getElementById("editMessageTextArea");
   const messageContent =
     messageBlock.querySelector(".message-content").textContent;
   textArea.value = messageContent.trim();
-}
+};
 
-function handleEditImage(messageBlock) {
+const handleEditImage = (messageBlock) => {
   currentMessageType = "image";
   const currentImageSrc = messageBlock.querySelector(".img-thumbnail").src;
   const editImagePreview = document.getElementById("editImagePreview");
@@ -459,12 +459,12 @@ function handleEditImage(messageBlock) {
     editImagePreview.style.display = "block";
   }
   editImageInput.style.display = "block";
-  editImageInput.onchange = function (event) {
+  editImageInput.onchange = (event) => {
     handleImageInputChange(event);
   };
-}
+};
 let newImgChange = "";
-function handleImageInputChange(event) {
+const handleImageInputChange = (event) => {
   const file = event.target.files[0];
   const editImagePreview = document.getElementById("editImagePreview");
 
@@ -478,21 +478,21 @@ function handleImageInputChange(event) {
         console.error("Error:", error);
       });
   }
-}
+};
 
-function showModalAndSetupSave(messageId, messageBlock) {
+const showModalAndSetupSave = (messageId, messageBlock) => {
   const modal = new bootstrap.Modal(
     document.getElementById("editMessageModal")
   );
   modal.show();
 
   const saveButton = document.getElementById("saveEditedMessage");
-  saveButton.onclick = function () {
+  saveButton.onclick = () => {
     handleSaveChanges(messageId, messageBlock, modal);
   };
-}
+};
 
-function handleSaveChanges(messageId, messageBlock, modal) {
+const handleSaveChanges = (messageId, messageBlock, modal) => {
   const channelId = localStorage.getItem("currentChannelID");
   const textArea = document.getElementById("editMessageTextArea");
   const editImagePreview = document.getElementById("editImagePreview");
@@ -544,13 +544,13 @@ function handleSaveChanges(messageId, messageBlock, modal) {
     newImgChange = "";
     modal.hide();
   });
-}
+};
 
-uploadImageIcon.addEventListener("click", function () {
+uploadImageIcon.addEventListener("click", () => {
   fileInput.click();
 });
 
-sendBtn.addEventListener("click", function () {
+sendBtn.addEventListener("click", () => {
   if (!navigator.onLine) {
     toast("You are offline. Cannot send message right now.", "error");
     return;
@@ -592,7 +592,7 @@ sendBtn.addEventListener("click", function () {
   }
 });
 
-messageTextarea.addEventListener("keyup", function (event) {
+messageTextarea.addEventListener("keyup", (event) => {
   if (event.key === "Enter" && !event.shiftKey) {
     event.preventDefault();
     sendBtn.click();
@@ -600,7 +600,7 @@ messageTextarea.addEventListener("keyup", function (event) {
 });
 
 const uploadedImagePreview = document.getElementById("uploadedImagePreview");
-fileInput.addEventListener("change", function () {
+fileInput.addEventListener("change", () => {
   if (fileInput.files.length > 0) {
     selectedImageFile = fileInput.files[0];
 
@@ -610,71 +610,12 @@ fileInput.addEventListener("change", function () {
   }
 });
 
-document
-  .getElementById("pinned-msg-btn")
-  .addEventListener("click", function () {
-    let channelId = getCurrentChannelID();
-    if (navigator.onLine) {
-      http.get(`/message/${channelId}?start=0`).then((data) => {
-        // console.log(data);
-        localStorage.setItem("channelMessages", JSON.stringify(data.messages));
-        let pinnedMessagesBody = document.getElementById("pinnedMessagesBody");
-
-        // Clear previous messages
-        while (pinnedMessagesBody.firstChild) {
-          pinnedMessagesBody.removeChild(pinnedMessagesBody.firstChild);
-        }
-
-        // Iterate over each message and append to the modal body
-        data.messages.forEach((item) => {
-          if (item.pinned) {
-            let pinnedMsgContainer = document.createElement("div");
-            pinnedMsgContainer.className = "pinned-msg-container";
-            const userId = item.sender;
-
-            getUserDetails(userId).then((authorDetails) => {
-              const nameAndTime = document.createElement("div");
-              nameAndTime.className = "name-and-time";
-
-              const authorName = document.createElement("div");
-              authorName.textContent = authorDetails.name;
-              authorName.className = "pinned-auth-name";
-
-              const msgTime = document.createElement("div");
-              msgTime.textContent = getLatestTimestamp(item);
-              msgTime.className = "pinned-msg-time";
-              let pinnedContent;
-
-              if (item.message) {
-                pinnedContent = document.createElement("div");
-                pinnedContent.textContent = item.message;
-                pinnedContent.className = "pinned-content";
-              } else if (item.image) {
-                pinnedContent = document.createElement("img");
-                pinnedContent.src = item.image;
-                pinnedContent.className = "pinned-image";
-              }
-
-              const unpinIcon = document.createElement("img");
-              unpinIcon.src = "./assets/x.svg";
-              unpinIcon.alt = "x icon";
-              unpinIcon.title = "Unpin the message";
-              unpinIcon.className = "pin-remove";
-              unpinIcon.setAttribute("message-id", item.id);
-
-              nameAndTime.appendChild(authorName);
-              nameAndTime.appendChild(msgTime);
-              pinnedMsgContainer.appendChild(nameAndTime);
-              pinnedMsgContainer.appendChild(pinnedContent);
-              pinnedMsgContainer.appendChild(unpinIcon);
-
-              pinnedMessagesBody.appendChild(pinnedMsgContainer);
-            });
-          }
-        });
-      });
-    } else {
-      const messages = JSON.parse(localStorage.getItem("channelMessages"));
+document.getElementById("pinned-msg-btn").addEventListener("click", () => {
+  let channelId = getCurrentChannelID();
+  if (navigator.onLine) {
+    http.get(`/message/${channelId}?start=0`).then((data) => {
+      // console.log(data);
+      localStorage.setItem("channelMessages", JSON.stringify(data.messages));
       let pinnedMessagesBody = document.getElementById("pinnedMessagesBody");
 
       while (pinnedMessagesBody.firstChild) {
@@ -682,7 +623,7 @@ document
       }
 
       // Iterate over each message and append to the modal body
-      messages.forEach((item) => {
+      data.messages.forEach((item) => {
         if (item.pinned) {
           let pinnedMsgContainer = document.createElement("div");
           pinnedMsgContainer.className = "pinned-msg-container";
@@ -728,10 +669,66 @@ document
           });
         }
       });
-    }
-  });
+    });
+  } else {
+    const messages = JSON.parse(localStorage.getItem("channelMessages"));
+    let pinnedMessagesBody = document.getElementById("pinnedMessagesBody");
 
-document.addEventListener("click", function (event) {
+    while (pinnedMessagesBody.firstChild) {
+      pinnedMessagesBody.removeChild(pinnedMessagesBody.firstChild);
+    }
+
+    // Iterate over each message and append to the modal body
+    messages.forEach((item) => {
+      if (item.pinned) {
+        let pinnedMsgContainer = document.createElement("div");
+        pinnedMsgContainer.className = "pinned-msg-container";
+        const userId = item.sender;
+
+        getUserDetails(userId).then((authorDetails) => {
+          const nameAndTime = document.createElement("div");
+          nameAndTime.className = "name-and-time";
+
+          const authorName = document.createElement("div");
+          authorName.textContent = authorDetails.name;
+          authorName.className = "pinned-auth-name";
+
+          const msgTime = document.createElement("div");
+          msgTime.textContent = getLatestTimestamp(item);
+          msgTime.className = "pinned-msg-time";
+          let pinnedContent;
+
+          if (item.message) {
+            pinnedContent = document.createElement("div");
+            pinnedContent.textContent = item.message;
+            pinnedContent.className = "pinned-content";
+          } else if (item.image) {
+            pinnedContent = document.createElement("img");
+            pinnedContent.src = item.image;
+            pinnedContent.className = "pinned-image";
+          }
+
+          const unpinIcon = document.createElement("img");
+          unpinIcon.src = "./assets/x.svg";
+          unpinIcon.alt = "x icon";
+          unpinIcon.title = "Unpin the message";
+          unpinIcon.className = "pin-remove";
+          unpinIcon.setAttribute("message-id", item.id);
+
+          nameAndTime.appendChild(authorName);
+          nameAndTime.appendChild(msgTime);
+          pinnedMsgContainer.appendChild(nameAndTime);
+          pinnedMsgContainer.appendChild(pinnedContent);
+          pinnedMsgContainer.appendChild(unpinIcon);
+
+          pinnedMessagesBody.appendChild(pinnedMsgContainer);
+        });
+      }
+    });
+  }
+});
+
+document.addEventListener("click", (event) => {
   if (event.target.classList.contains("to-pin")) {
     if (!navigator.onLine) {
       toast("You are offline. Cannot pin/unpin right now.", "error");
@@ -757,7 +754,7 @@ document.addEventListener("click", function (event) {
   }
 });
 
-document.addEventListener("click", function (event) {
+document.addEventListener("click", (event) => {
   if (event.target.classList.contains("pin-remove")) {
     if (!navigator.onLine) {
       toast("You are offline. Cannot unpin right now.", "error");
@@ -783,7 +780,7 @@ document.addEventListener("click", function (event) {
 
 const messageList = document.getElementById("message-list");
 
-messageList.addEventListener("click", function (event) {
+messageList.addEventListener("click", (event) => {
   let targetElement = event.target;
 
   while (
@@ -801,7 +798,7 @@ messageList.addEventListener("click", function (event) {
   }
 });
 
-function displayUserProfile(userData) {
+const displayUserProfile = (userData) => {
   document.getElementById("profileImage").src = userData.image;
   document.getElementById("profileImage").src = userData.image
     ? userData.image
@@ -813,9 +810,9 @@ function displayUserProfile(userData) {
     document.getElementById("profileModal")
   );
   profileModal.show();
-}
+};
 
-function reactMessage(emojiCode, messageId) {
+const reactMessage = (emojiCode, messageId) => {
   if (!navigator.onLine) {
     toast("You are offline. Cannot add reaction right now.", "error");
     return;
@@ -829,9 +826,9 @@ function reactMessage(emojiCode, messageId) {
     window.__MESSAGE_START__ = 0;
     fetchChannelMessage(getCurrentChannelID());
   });
-}
+};
 
-function unreactMessage(emojiCode, messageId) {
+const unreactMessage = (emojiCode, messageId) => {
   if (!navigator.onLine) {
     toast("You are offline. Cannot unreact message right now.", "error");
     return;
@@ -845,9 +842,9 @@ function unreactMessage(emojiCode, messageId) {
     window.__MESSAGE_START__ = 0;
     fetchChannelMessage(getCurrentChannelID());
   });
-}
+};
 
-function generateReactInfo(message, userId) {
+const generateReactInfo = (message, userId) => {
   const emojiCodes = [
     "\uD83D\uDC4D",
     "\uD83D\uDE42",
@@ -888,9 +885,9 @@ function generateReactInfo(message, userId) {
   });
 
   return reactContainer;
-}
+};
 
-document.addEventListener("click", function (event) {
+document.addEventListener("click", (event) => {
   if (event.target.classList.contains("img-thumbnail")) {
     const carouselInner = document.querySelector(".carousel-inner");
     clearDom(carouselInner);
@@ -925,7 +922,7 @@ document.addEventListener("click", function (event) {
   }
 });
 
-function toggleMessageType() {
+const toggleMessageType = () => {
   const selector = document.getElementById("messageTypeSelector");
   const textArea = document.getElementById("editMessageTextArea");
   const imageUploadDiv = document.getElementById("imageUploadDiv");
@@ -938,32 +935,32 @@ function toggleMessageType() {
     textArea.style.display = "none";
     imageUploadDiv.style.display = "";
   }
-}
+};
 
-document.body.addEventListener("change", function (event) {
+document.body.addEventListener("change", (event) => {
   if (event.target.id === "editImageInput") {
     handleImageInputChange(event);
   }
 });
 
-function getLastMessageIdForChannel(channelId) {
+const getLastMessageIdForChannel = (channelId) => {
   return localStorage.getItem(`lastMessageId_${channelId}`);
-}
+};
 
-function setLastMessageIdForChannel(channelId, messageId) {
+const setLastMessageIdForChannel = (channelId, messageId) => {
   localStorage.setItem(`lastMessageId_${channelId}`, String(messageId));
-}
+};
 
-function setCurrentChannelLastMessageId(channelId) {
+const setCurrentChannelLastMessageId = (channelId) => {
   http.get(`/message/${channelId}?start=0`).then((response) => {
     const latestMessage = response.messages[0];
     if (latestMessage) {
       setLastMessageIdForChannel(channelId, latestMessage.id);
     }
   });
-}
+};
 
-function checkForNewMessages(channelId) {
+const checkForNewMessages = (channelId) => {
   let lastMessageIdStored = getLastMessageIdForChannel(channelId);
   let lastMessageId = lastMessageIdStored
     ? parseInt(lastMessageIdStored, 10)
@@ -980,9 +977,9 @@ function checkForNewMessages(channelId) {
       setLastMessageIdForChannel(channelId, latestMessage.id);
     }
   });
-}
+};
 
-function showNotification(message) {
+const showNotification = (message) => {
   getUserDetails(message.sender).then((senderDetails) => {
     const toastElement = document.getElementById("show-newmsg-toast");
     const toastBody = document.getElementById("newmsg-toast-body");
@@ -1005,13 +1002,13 @@ function showNotification(message) {
 
     toastElement.addEventListener(
       "hidden.bs.toast",
-      function () {
+      () => {
         fetchChannelMessage(getCurrentChannelID());
       },
       { once: true }
     );
   });
-}
+};
 
 setInterval(() => {
   if (navigator.onLine) {

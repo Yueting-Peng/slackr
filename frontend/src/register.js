@@ -3,12 +3,12 @@ import { toast } from "./toast.js";
 
 const signupForm = document.getElementById("signup-form");
 
-function register(data) {
+const register = (data) => {
   http.post("/auth/register", data).then((res) => {
     localStorage.setItem("token", res.token);
     window.location.hash = "#channel";
   });
-}
+};
 
 signupForm.addEventListener("submit", (event) => {
   // Prevent the form from submitting in the traditional way

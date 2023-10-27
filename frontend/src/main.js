@@ -12,12 +12,12 @@ const loginStatus = () => {
   return localStorage.getItem("token") !== null;
 };
 
-function triggerLoading() {
+const triggerLoading = () => {
   const loadingEle = document.getElementById("loading-dom");
   setTimeout(() => {
     loadingEle.style.display = "none";
   }, 500);
-}
+};
 
 const showPage = (pageName) => {
   const pages = ["channel", "login", "profile", "register"];
@@ -115,13 +115,13 @@ const handleHashChange = () => {
 };
 
 window.onhashchange = handleHashChange;
-window.onload = function () {
+window.onload = () => {
   triggerLoading();
   handleHashChange();
 };
 
-export function clearDom(dom) {
+export const clearDom = (dom) => {
   while (dom.firstChild) {
     dom.removeChild(dom.firstChild);
   }
-}
+};

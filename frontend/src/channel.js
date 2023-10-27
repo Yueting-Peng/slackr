@@ -3,15 +3,15 @@ import { toast } from "./toast.js";
 import { fetchChannelMessage, showCachedChannelMessage } from "./message.js";
 import { clearDom } from "./main.js";
 
-export function setCurrentChannelID(channelID) {
+export const setCurrentChannelID = (channelID) => {
   localStorage.setItem("currentChannelID", channelID);
-}
+};
 
-export function getCurrentChannelID() {
+export const getCurrentChannelID = () => {
   return localStorage.getItem("currentChannelID");
-}
+};
 
-export function fetchChannelList(selectedId) {
+export const fetchChannelList = (selectedId) => {
   window.__MESSAGE_START__ = 0;
   if (navigator.onLine) {
     http.get("/channel").then((res) => {
@@ -41,9 +41,9 @@ export function fetchChannelList(selectedId) {
       toast("No cached channel list data available for offline mode.", "error");
     }
   }
-}
+};
 
-export function getUserInfo() {
+export const getUserInfo = () => {
   const userInfoString = localStorage.getItem("userInfo");
   try {
     const userInfo = JSON.parse(userInfoString);
@@ -52,7 +52,7 @@ export function getUserInfo() {
     toast(err.message, "error");
     return {};
   }
-}
+};
 
 const generateRandomColor = () => {
   const getRandomValue = (min, max) =>
@@ -67,7 +67,7 @@ const generateRandomColor = () => {
     .toUpperCase()}`;
 };
 
-export function fetchUserList() {
+export const fetchUserList = () => {
   if (navigator.onLine) {
     return http.get("/user").then((res) => {
       const { users } = res;
@@ -90,9 +90,9 @@ export function fetchUserList() {
       toast("No cached user data available for offline mode.", "error");
     }
   }
-}
+};
 
-export function showChannelList(channelList, type, channelId) {
+export const showChannelList = (channelList, type, channelId) => {
   const isPublicType = type === "public";
   const listDom = document.getElementById(
     isPublicType ? "publicChannelList" : "privateChannelList"
@@ -150,9 +150,9 @@ export function showChannelList(channelList, type, channelId) {
   unjoinedList.forEach((channel) =>
     appendChannelToDOM(channel, false, targetChannelId)
   );
-}
+};
 
-export function fetchChannelDetail(channelId) {
+export const fetchChannelDetail = (channelId) => {
   if (navigator.onLine) {
     http.get(`/channel/${channelId}`).then((detail) => {
       localStorage.setItem("channelDetail", JSON.stringify(detail));
@@ -177,14 +177,14 @@ export function fetchChannelDetail(channelId) {
       );
     }
   }
-}
+};
 
-function showChannelHeader(detail) {
+const showChannelHeader = (detail) => {
   const channelHeaderDom = document.getElementById("channel-header");
   channelHeaderDom.innerText = "# " + detail.name;
-}
+};
 
-export function formatDateToUserFriendly(isoString) {
+export const formatDateToUserFriendly = (isoString) => {
   const dateObj = new Date(isoString);
 
   // Format the date part
@@ -209,27 +209,51 @@ export function formatDateToUserFriendly(isoString) {
   const formattedTime = dateObj.toLocaleTimeString("en-AU", timeOptions);
 
   return `${formattedDate} ${formattedTime}`;
-}
+};
 
-export function getUserDetails(userId) {
+export const getUserDetails = (userId) => {
   const isOnline = navigator.onLine;
 
   if (isOnline) {
     return http.get(`/user/${userId}`).then((res) => {
-      localStorage.setItem(`user_${userId}`, JSON.stringify(res));
+      try {
+        localStorage.setItem(`user_${userId}`, JSON.stringify(res));
+      } catch (error) {
+        if (
+          error instanceof DOMException &&
+          error.name === "QuotaExceededError"
+        ) {
+          console.error(
+            `LocalStorage quota exceeded while saving user_${userId}`
+          );
+        } else {
+          console.error(
+            `An unexpected error occurred while saving user_${userId}`,
+            error
+          );
+        }
+      }
       return res;
     });
   } else {
-    const cachedData = localStorage.getItem(`user_${userId}`);
-    if (cachedData) {
-      return Promise.resolve(JSON.parse(cachedData));
-    } else {
-      return Promise.reject(new Error("No data available in cache."));
+    try {
+      const cachedData = localStorage.getItem(`user_${userId}`);
+      if (cachedData) {
+        return Promise.resolve(JSON.parse(cachedData));
+      } else {
+        return Promise.reject(new Error("No data available in cache."));
+      }
+    } catch (error) {
+      console.error(
+        `An unexpected error occurred while retrieving user_${userId} from localStorage`,
+        error
+      );
+      return Promise.reject(new Error("Failed to retrieve cached data."));
     }
   }
-}
+};
 
-document.querySelector("#create-channel-btn").onclick = function () {
+document.querySelector("#create-channel-btn").onclick = () => {
   if (!navigator.onLine) {
     toast("You are offline. Cannot create a channel right now.", "error");
     return;
@@ -263,7 +287,7 @@ document.querySelector("#create-channel-btn").onclick = function () {
     });
 };
 
-function handleChannelListClick(event) {
+const handleChannelListClick = (event) => {
   const item = event.target.closest(".channel-item");
   const itemId = item.id;
   if (item) {
@@ -298,10 +322,10 @@ function handleChannelListClick(event) {
 
     window.location.href = `#channel=${itemId}`;
   }
-}
+};
 
 const logoutDom = document.getElementById("logoutBtn");
-logoutDom.addEventListener("click", function (event) {
+logoutDom.addEventListener("click", (event) => {
   event.preventDefault();
   const isConfirmed = confirm(
     "Are you sure you want to log out of your current account?"
@@ -318,7 +342,7 @@ logoutDom.addEventListener("click", function (event) {
 });
 
 const registerDom = document.getElementById("registerBtn");
-registerDom.addEventListener("click", function (event) {
+registerDom.addEventListener("click", (event) => {
   event.preventDefault();
   const isConfirmed = confirm(
     "Are you sure you want to sign out of your existing account and proceed to the registration page?"
@@ -341,7 +365,7 @@ document
   .getElementById("privateChannelList")
   .addEventListener("click", handleChannelListClick);
 
-document.getElementById("edit-channel").addEventListener("click", function () {
+document.getElementById("edit-channel").addEventListener("click", () => {
   const channelId = getCurrentChannelID();
   if (navigator.onLine) {
     http.get(`/channel/${channelId}`).then((response) => {
@@ -374,7 +398,7 @@ document.getElementById("edit-channel").addEventListener("click", function () {
 
 document
   .getElementById("change-channelInfo-btn")
-  .addEventListener("click", function (event) {
+  .addEventListener("click", (event) => {
     event.preventDefault();
 
     const channelId = getCurrentChannelID();
@@ -409,7 +433,7 @@ document
       });
   });
 
-document.getElementById("channel-info").addEventListener("click", function () {
+document.getElementById("channel-info").addEventListener("click", () => {
   const channelId = getCurrentChannelID();
 
   http
@@ -439,17 +463,17 @@ document.getElementById("channel-info").addEventListener("click", function () {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const channelBar = document.getElementById("mb-channel-bar");
   const sidebar = document.querySelector(".sidebar");
 
-  channelBar.addEventListener("click", function (event) {
+  channelBar.addEventListener("click", (event) => {
     event.preventDefault();
     sidebar.style.display = sidebar.style.display === "none" ? "block" : "none";
   });
 });
 
-document.getElementById("message-list").onscroll = function (e) {
+document.getElementById("message-list").onscroll = (e) => {
   const { scrollTop } = e.target;
   if (scrollTop === 0 && window.__CHANNEL_MESSAGE_LOADED__) {
     window.__MESSAGE_START__ += 25;

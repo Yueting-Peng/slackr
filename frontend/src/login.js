@@ -4,26 +4,24 @@ import http from "./request.js";
 import { toast } from "./toast.js";
 import { fetchUserInfo } from "./request.js";
 
-function login(data) {
+const login = (data) => {
   http.post("/auth/login", data).then((res) => {
     localStorage.setItem("token", res.token);
     window.location.hash = "#channel";
     fetchUserInfo(res.userId);
   });
-}
+};
 
-document
-  .getElementById("login-form")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
+document.getElementById("login-form").addEventListener("submit", (event) => {
+  event.preventDefault();
 
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
 
-    if (!email || !password) {
-      toast("Please fill in both email and password.", "error");
-      return;
-    }
+  if (!email || !password) {
+    toast("Please fill in both email and password.", "error");
+    return;
+  }
 
-    login({ email, password });
-  });
+  login({ email, password });
+});
