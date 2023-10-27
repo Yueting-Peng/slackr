@@ -5,7 +5,7 @@
 
 ## 2. Loading Spinner Page
 
-- **Description**: Implemented a loading spinner page that appears whenever data is being fetched or loaded. 
+- **Description**: Implemented a loading spinner page that appears whenever data is being fetched or loaded.
 - **Benefit**: It enhances the user experience by providing visual feedback that the page is loading, thus preventing any confusion or abrupt page changes.
 
 ## 3. Enter Key Message Send
@@ -43,3 +43,15 @@
 
 - **Description**: Before sending an image to the channel, users can preview the chosen image as a thumbnail in the top right corner of the input box.
 - **Benefit**: This gives users a confirmation of the image they're about to send, preventing accidental image sends and enhancing user confidence in their actions.
+
+## 9. Logout from Multiple Pages
+
+- **Feature**: Provided a logout functionality accessible both from the channel and profile pages.
+- **Benefit**: Offers users the flexibility to sign out from different parts of the application without the need to navigate to a specific page. This enhances user convenience and provides a seamless experience.
+- **Reason for Additional Marks**: Demonstrates thoughtful user experience design by providing essential features at the users' fingertips, regardless of their current location within the app.
+
+## 10. Auto-Redirect for Unauthorized Access
+
+- **Feature**: When a user who is not logged in (i.e., no token in local storage) tries to access the channel/profile screen, they are automatically redirected to the login page.
+- **Benefit**: Ensures the privacy and security of the channel content. Also, it prevents potential errors or malfunctions that may occur if unauthorized users attempt to interact with the channel's features.
+- **Reason for Additional Marks**: Prioritizes user security and data protection by preventing unauthorized access and guiding users to the appropriate authentication process.

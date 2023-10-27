@@ -15,6 +15,7 @@ export const fetchChannelList = (selectedId) => {
   window.__MESSAGE_START__ = 0;
   if (navigator.onLine) {
     http.get("/channel").then((res) => {
+      console.log(res.channels);
       localStorage.setItem("channelList", JSON.stringify(res.channels));
       if (selectedId) {
         setCurrentChannelID(selectedId);
