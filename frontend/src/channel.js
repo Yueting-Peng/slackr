@@ -476,7 +476,9 @@ document.addEventListener("DOMContentLoaded", () => {
 document.getElementById("message-list").onscroll = (e) => {
   const { scrollTop } = e.target;
   if (scrollTop === 0 && window.__CHANNEL_MESSAGE_LOADED__) {
+    const messageListEle = e.target;
+    const prevScrollHeight = messageListEle.scrollHeight;
     window.__MESSAGE_START__ += 25;
-    fetchChannelMessage(getCurrentChannelID());
+    fetchChannelMessage(getCurrentChannelID(), prevScrollHeight);
   }
 };

@@ -227,9 +227,20 @@ const createRightMsgDom = (item, senderDetails) => {
   return messageRightDom;
 };
 
-export const fetchChannelMessage = (channelId) => {
+document.getElementById("message-list").onscroll = (e) => {
+  const { scrollTop } = e.target;
+  if (scrollTop === 0 && window.__CHANNEL_MESSAGE_LOADED__) {
+    const messageListEle = e.target;
+    const prevScrollHeight = messageListEle.scrollHeight;
+    window.__MESSAGE_START__ += 25;
+    fetchChannelMessage(getCurrentChannelID(), prevScrollHeight);
+  }
+};
+
+export const fetchChannelMessage = (channelId, prevScrollHeight) => {
   window.__CHANNEL_MESSAGE_LOADED__ = false;
   const messageListEle = document.getElementById("message-list");
+  const prevScrollTop = messageListEle.scrollTop;
   if (window.__MESSAGE_START__ === 0) {
     clearDom(messageListEle);
   }
@@ -269,20 +280,17 @@ export const fetchChannelMessage = (channelId) => {
         const messagePromises = messages.map((item, index) => {
           const senderId = item.sender;
           return getUserDetails(senderId).then((senderDetails) => {
-            // console.log(item);
             const messageContainer = document.createElement("div");
             messageContainer.className = item.pinned
               ? "message-block pinned"
               : "message-block";
 
-            //left: user image
             const userImageElement = createUserImageElement(
               senderDetails,
               senderId
             );
             messageContainer.appendChild(userImageElement);
 
-            //right: header and content
             const messageContentElement = createRightMsgDom(
               item,
               senderDetails
@@ -304,14 +312,25 @@ export const fetchChannelMessage = (channelId) => {
               messageListEle.appendChild(messageElem);
             }
           });
-          if (window.__MESSAGE_START__ === 0) {
+
+          if (prevScrollHeight) {
+            const newScrollHeight = messageListEle.scrollHeight;
+            const scrollDiff = newScrollHeight - prevScrollHeight;
+            messageListEle.scrollTop = prevScrollTop + scrollDiff;
+          } else if (window.__MESSAGE_START__ === 0) {
             messageListEle.scrollTop = messageListEle.scrollHeight;
           }
+
+          window.__CHANNEL_MESSAGE_LOADED__ = true;
         });
       }
+    })
+    .catch((error) => {
+      console.error("Failed to fetch messages:", error);
       window.__CHANNEL_MESSAGE_LOADED__ = true;
     });
 };
+
 export const showCachedChannelMessage = () => {
   const messageListEle = document.getElementById("message-list");
   const messages = JSON.parse(localStorage.getItem("channelMessages"));
