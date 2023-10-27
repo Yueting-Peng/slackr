@@ -8,7 +8,7 @@ import { BACKEND_PORT } from "./config.js";
 import { fileToDataUrl } from "./helpers.js";
 import { generateMyProfile, generateUserProfile } from "./profile.js";
 
-const loginStatus = () => {
+export const loginStatus = () => {
   return localStorage.getItem("token") !== null;
 };
 

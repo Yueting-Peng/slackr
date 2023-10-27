@@ -3,10 +3,12 @@
 import http from "./request.js";
 import { toast } from "./toast.js";
 import { fetchUserInfo } from "./request.js";
+import { startInterval } from "./message.js";
 
 const login = (data) => {
   http.post("/auth/login", data).then((res) => {
     localStorage.setItem("token", res.token);
+    startInterval();
     window.location.hash = "#channel";
     fetchUserInfo(res.userId);
   });

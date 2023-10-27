@@ -2,6 +2,7 @@ import http from "./request.js";
 import { toast } from "./toast.js";
 import { fetchChannelMessage, showCachedChannelMessage } from "./message.js";
 import { clearDom } from "./main.js";
+import { clear_interval } from "./message.js";
 
 export const setCurrentChannelID = (channelID) => {
   localStorage.setItem("currentChannelID", channelID);
@@ -335,6 +336,7 @@ logoutDom.addEventListener("click", (event) => {
 
   http.post("/auth/logout").then((res) => {
     console.log(res);
+    clear_interval();
     localStorage.removeItem("token");
     localStorage.removeItem("userInfo");
     localStorage.removeItem("currentChannelID");
@@ -352,6 +354,7 @@ registerDom.addEventListener("click", (event) => {
 
   http.post("/auth/logout").then((res) => {
     console.log(res);
+    clear_interval();
     localStorage.removeItem("token");
     localStorage.removeItem("userInfo");
     localStorage.removeItem("currentChannelID");

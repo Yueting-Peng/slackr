@@ -2,6 +2,7 @@ import { fileToDataUrl } from "./helpers.js";
 import { getUserInfo, getUserDetails } from "./channel.js";
 import http from "./request.js";
 import { toast } from "./toast.js";
+import { clear_interval } from "./message.js";
 
 export const generateMyProfile = () => {
   const profileEditBox = document.querySelector(
@@ -118,6 +119,7 @@ signoutDom.addEventListener("click", () => {
 
   http.post("/auth/logout").then((res) => {
     console.log(res);
+    clear_interval();
     localStorage.removeItem("token");
     localStorage.removeItem("userInfo");
     localStorage.removeItem("currentChannelID");
@@ -134,6 +136,7 @@ toRegister.addEventListener("click", () => {
 
   http.post("/auth/logout").then((res) => {
     console.log(res);
+    clear_interval();
     localStorage.removeItem("token");
     localStorage.removeItem("userInfo");
     localStorage.removeItem("currentChannelID");

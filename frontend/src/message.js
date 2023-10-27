@@ -10,6 +10,12 @@ import {
 import { fileToDataUrl } from "./helpers.js";
 import { clearDom } from "./main.js";
 
+let intervalSet;
+
+export const clear_interval = () => {
+  clearInterval(intervalSet);
+};
+
 const getLatestTimestamp = (message) => {
   if (!message.editedAt && !message.sentAt) {
     return null;
@@ -1011,11 +1017,13 @@ const showNotification = (message) => {
   });
 };
 
-setInterval(() => {
-  if (navigator.onLine) {
-    const channelId = getCurrentChannelID();
-    if (channelId) {
-      checkForNewMessages(channelId);
+export const startInterval = () => {
+  intervalSet = setInterval(() => {
+    if (navigator.onLine) {
+      const channelId = getCurrentChannelID();
+      if (channelId) {
+        checkForNewMessages(channelId);
+      }
     }
-  }
-}, 1500);
+  }, 1500);
+};
