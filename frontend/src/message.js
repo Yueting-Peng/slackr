@@ -612,66 +612,46 @@ fileInput.addEventListener("change", () => {
 
 document.getElementById("pinned-msg-btn").addEventListener("click", () => {
   let channelId = getCurrentChannelID();
-  if (navigator.onLine) {
-    http.get(`/message/${channelId}?start=0`).then((data) => {
-      // console.log(data);
-      localStorage.setItem("channelMessages", JSON.stringify(data.messages));
-      let pinnedMessagesBody = document.getElementById("pinnedMessagesBody");
+  let allMessages = [];
+  let start = 0;
 
-      while (pinnedMessagesBody.firstChild) {
-        pinnedMessagesBody.removeChild(pinnedMessagesBody.firstChild);
-      }
-
-      // Iterate over each message and append to the modal body
-      data.messages.forEach((item) => {
-        if (item.pinned) {
-          let pinnedMsgContainer = document.createElement("div");
-          pinnedMsgContainer.className = "pinned-msg-container";
-          const userId = item.sender;
-
-          getUserDetails(userId).then((authorDetails) => {
-            const nameAndTime = document.createElement("div");
-            nameAndTime.className = "name-and-time";
-
-            const authorName = document.createElement("div");
-            authorName.textContent = authorDetails.name;
-            authorName.className = "pinned-auth-name";
-
-            const msgTime = document.createElement("div");
-            msgTime.textContent = getLatestTimestamp(item);
-            msgTime.className = "pinned-msg-time";
-            let pinnedContent;
-
-            if (item.message) {
-              pinnedContent = document.createElement("div");
-              pinnedContent.textContent = item.message;
-              pinnedContent.className = "pinned-content";
-            } else if (item.image) {
-              pinnedContent = document.createElement("img");
-              pinnedContent.src = item.image;
-              pinnedContent.className = "pinned-image";
-            }
-
-            const unpinIcon = document.createElement("img");
-            unpinIcon.src = "./assets/x.svg";
-            unpinIcon.alt = "x icon";
-            unpinIcon.title = "Unpin the message";
-            unpinIcon.className = "pin-remove";
-            unpinIcon.setAttribute("message-id", item.id);
-
-            nameAndTime.appendChild(authorName);
-            nameAndTime.appendChild(msgTime);
-            pinnedMsgContainer.appendChild(nameAndTime);
-            pinnedMsgContainer.appendChild(pinnedContent);
-            pinnedMsgContainer.appendChild(unpinIcon);
-
-            pinnedMessagesBody.appendChild(pinnedMsgContainer);
-          });
+  const getAllMessages = () => {
+    if (navigator.onLine) {
+      http.get(`/message/${channelId}?start=${start}`).then((data) => {
+        if (data.messages && data.messages.length > 0) {
+          allMessages = allMessages.concat(data.messages);
+          start += data.messages.length;
+          getAllMessages();
+        } else {
+          processMessages(allMessages);
         }
       });
-    });
-  } else {
-    const messages = JSON.parse(localStorage.getItem("channelMessages"));
+    } else {
+      const messages = JSON.parse(localStorage.getItem("channelMessages"));
+      processMessages(messages);
+    }
+  };
+
+  const processMessages = (messages) => {
+    console.log(messages.length);
+    try {
+      localStorage.setItem("channelMessages", JSON.stringify(messages));
+    } catch (error) {
+      if (
+        error instanceof DOMException &&
+        error.name === "QuotaExceededError"
+      ) {
+        console.error(
+          "LocalStorage quota exceeded while saving channel messages"
+        );
+      } else {
+        console.error(
+          "An unexpected error occurred while saving channel messages",
+          error
+        );
+      }
+    }
+
     let pinnedMessagesBody = document.getElementById("pinnedMessagesBody");
 
     while (pinnedMessagesBody.firstChild) {
@@ -725,7 +705,9 @@ document.getElementById("pinned-msg-btn").addEventListener("click", () => {
         });
       }
     });
-  }
+  };
+
+  getAllMessages();
 });
 
 document.addEventListener("click", (event) => {
