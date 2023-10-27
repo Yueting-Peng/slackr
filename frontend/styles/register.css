@@ -1,0 +1,46 @@
+/*signup page*/
+.register {
+  width: 100%;
+  justify-content: space-between;
+  flex-direction: row;
+  margin-top: 50px;
+  background-color: #faf7f7;
+}
+.register-left {
+  display: flex;
+  flex: 0.4;
+  padding: 80px;
+  justify-content: center;
+}
+.register-right {
+  flex: 0.6;
+  display: flex;
+  align-items: center;
+}
+.register-img {
+  width: 100%;
+  margin: auto;
+}
+#signup-form {
+  width: 100%;
+  font-size: 1.2rem;
+  max-width: 500px;
+}
+
+@media (max-width: 950px) {
+  .register {
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  .register-left {
+    width: 100%;
+    padding: 20px;
+  }
+  #signup-form {
+    width: 100%;
+    font-size: 1rem;
+  }
+  #signup-form h1 {
+    font-size: 1.2rem;
+  }
+}

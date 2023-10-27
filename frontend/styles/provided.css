@@ -1,9 +1,49 @@
-
 /* base styles, feel free to edit */
-html, body {
-    margin: 0;
-    padding: 0;
-    background-color: #fafafa;
-    height: 100%;
-    font-family: -apple-system, 'Open Sans', 'Helvetica Neue', sans-serif;
+html,
+body {
+  margin: 0;
+  /* padding: 5px; */
+  height: 100vh;
+  background-color: #fafafa;
+  font-family: -apple-system, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.page {
+  display: none;
+}
+
+.main-section {
+  width: 100%;
+}
+
+/*toast style*/
+
+.toast {
+  position: fixed;
+  right: 0;
+  z-index: 10;
+}
+
+.toast.success .toast-header {
+  background-color: #00C67A;
+}
+
+.toast.error .toast-header {
+  background-color: #D66956;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+}
+
+#loading-dom {
+  display: flex;
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(241, 242, 243);
+  z-index: 1000;
 }

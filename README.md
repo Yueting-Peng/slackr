@@ -110,7 +110,7 @@ Milestone 3 focuses on the display and interaction of messages on a single chann
  * The channel's messages can be viewed on each single channel screen.
  * Each message should display the sender's name and profile photo, and message timestamp (as a time/date not as an ISO string, flexible to whatever you think is user-friendly).
  * If the user has no profile photo, the frontend should use a default image.
- 
+
 #### 2.3.2 Message pagination
  * Users can page between sets of messages in the channel.
  * Note: you can ignore this if you properly implement infinite scroll in milestone 6.
@@ -435,7 +435,7 @@ knowledge.
 This assignment is due *Friday 27th October, 10pm*.
 
 To submit your assignment, you must you've pushed all of your code to your gitlab master branch. You can check if you've done this properly by seeing what code is on the gitlab site on your master branch.
- 
+
 We will collect the latest work on your master branch of gitlab at the time of submission.
 
 It is your responsibiltiy to ensure that your code can run successfully when cloned fresh from Gitlab.

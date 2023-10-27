@@ -1,0 +1,53 @@
+/*login page*/
+
+.login {
+  width: 100%;
+  justify-content: space-between;
+  flex-direction: row;
+  margin-top: 40px;
+  background-color: #ffffff;
+  display: flex;
+}
+.login-left {
+  flex: 0.6;
+}
+#login-form {
+  font-size: 1.2rem;
+  width: 80%;
+  max-width: 500px;
+}
+.login-right {
+  flex: 0.4;
+  margin: auto;
+}
+
+#login-img {
+  width: 100%;
+}
+
+.reg-link {
+  margin-top: 15px;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 990px) {
+  .login {
+    flex-direction: column-reverse;
+    margin-top: 20px;
+  }
+  .login-right {
+    width: 80%;
+  }
+  #login-form {
+    margin: auto;
+    font-size: 0.9rem;
+    width: 100%;
+  }
+  #login-form h1 {
+    font-size: 1.2rem;
+  }
+  .reg-link {
+    text-align: center;
+    font-size: 1rem;
+  }
+}

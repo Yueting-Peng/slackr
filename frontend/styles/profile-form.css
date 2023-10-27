@@ -1,0 +1,95 @@
+/* Overall styling for the form */
+#userProfileForm {
+  width: 100%;
+  /* max-width: 600px; */
+  margin: 1em auto;
+  padding: 1em;
+  border-radius: 10px;
+  overflow: auto;
+}
+
+/* Styling for input fields and textarea */
+#userProfileForm input[type="text"],
+#userProfileForm input[type="email"],
+#userProfileForm input[type="password"],
+#userProfileForm textarea {
+  width: 100%;
+  padding: 0.5em;
+  margin: 0.5em 0;
+  border: 1px solid #d5d7e2;
+  border-radius: 5px;
+}
+
+/* Styling for the file input */
+#userProfileForm input[type="file"] {
+  margin-top: 0.5em;
+}
+
+/* Styling for the profile image */
+#displayImage {
+  display: block;
+  margin: 1em 0;
+  border-radius: 10px;
+}
+
+/* Styling for labels */
+#userProfileForm label {
+  display: block;
+  margin-top: 1em;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* Styling for buttons */
+#userProfileForm input[type="button"] {
+  background-color: #8090bc;
+  color: white;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#userProfileForm input[type="button"]:hover {
+  background-color: #0056b3;
+}
+
+#saveProfileChangesBtn:hover {
+  background-color: #2b5da3;
+}
+
+#userProfileForm > h4 {
+  text-align: center;
+}
+.profile-setting {
+  display: flex;
+  max-width: 700px;
+  margin: auto;
+}
+.basic-info {
+  flex: 1;
+  margin-left: 30px;
+}
+.my-img {
+  display: flex;
+  flex-direction: column;
+  flex: 0.5;
+  align-items: center;
+}
+
+.password-change-area {
+  max-width: 700px;
+  margin: auto;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+.password-change-area h4 {
+  text-align: center;
+}
+
+.profile-sav-btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
