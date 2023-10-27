@@ -967,7 +967,7 @@ const setCurrentChannelLastMessageId = (channelId) => {
   });
 };
 
-const checkForNewMessages = (channelId) => {
+const checkForNewMessages = (channelId, channelName) => {
   let lastMessageIdStored = getLastMessageIdForChannel(channelId);
   let lastMessageId = lastMessageIdStored
     ? parseInt(lastMessageIdStored, 10)
@@ -980,22 +980,21 @@ const checkForNewMessages = (channelId) => {
         setLastMessageIdForChannel(channelId, latestMessage.id);
       }
     } else if (latestMessage && latestMessage.id > lastMessageId) {
-      showNotification(latestMessage);
+      showNotification(latestMessage, channelName);
       setLastMessageIdForChannel(channelId, latestMessage.id);
     }
   });
 };
 
-const showNotification = (message) => {
+const showNotification = (message, channelName) => {
   getUserDetails(message.sender).then((senderDetails) => {
     const toastElement = document.getElementById("show-newmsg-toast");
     const toastBody = document.getElementById("newmsg-toast-body");
     const toastTime = document.getElementById("newmsg-toast-time");
-
     if (message.message) {
-      toastBody.textContent = `${senderDetails.name}: ${message.message}`;
+      toastBody.textContent = `${senderDetails.name} posted in the ${channelName}: ${message.message}`;
     } else if (message.image) {
-      toastBody.textContent = `${senderDetails.name} sent a new image.`;
+      toastBody.textContent = `${senderDetails.name} sent a new image in the ${channelName}.`;
     }
 
     toastTime.textContent = timeAgo(message.sentAt);
@@ -1017,13 +1016,22 @@ const showNotification = (message) => {
   });
 };
 
+const getJoinedChannels = () => {
+  return http.get("/channel").then((res) => {
+    const userInfo = getUserInfo();
+    const userId = userInfo.userId;
+    return res.channels.filter((channel) => channel.members.includes(userId));
+  });
+};
+
 export const startInterval = () => {
   intervalSet = setInterval(() => {
     if (navigator.onLine) {
-      const channelId = getCurrentChannelID();
-      if (channelId) {
-        checkForNewMessages(channelId);
-      }
+      getJoinedChannels().then((joinedChannels) => {
+        joinedChannels.forEach((channel) => {
+          checkForNewMessages(channel.id, channel.name);
+        });
+      });
     }
-  }, 1500);
+  }, 2000);
 };
