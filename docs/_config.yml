@@ -1,10 +1,41 @@
 title: Slackr
-description: A Real-time Messaging Application
-theme: jekyll-theme-minimal
+description: A modern real-time messaging application built with vanilla JavaScript
+author: Yueting Peng
+logo: /assets/images/logo.png
+show_downloads: true
+google_analytics: # 如果你有 Google Analytics ID 可以加上
+theme: jekyll-theme-cayman
+
+# Social links
+github:
+  is_project_page: true
+  repository_url: https://github.com/Yueting-Peng/slackr
+  repository_name: slackr
+  owner_url: https://github.com/Yueting-Peng
+  owner_name: Yueting Peng
+
+# SEO settings
+twitter:
+  username: # 如果你有 Twitter 账号可以加上
+social:
+  name: Yueting Peng
+  links:
+    - https://github.com/Yueting-Peng
+    - https://www.linkedin.com/in/your-linkedin # 如果你有 LinkedIn 可以加上
 
 # Build settings
 markdown: kramdown
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
-  - jekyll-sitemap 
+  - jekyll-sitemap
+  - jekyll-github-metadata
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/ 
