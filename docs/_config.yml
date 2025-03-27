@@ -1,0 +1,10 @@
+title: Slackr
+description: A Real-time Messaging Application
+theme: jekyll-theme-minimal
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap 
