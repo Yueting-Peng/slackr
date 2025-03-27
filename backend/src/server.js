@@ -4,9 +4,8 @@ import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 import morgan from 'morgan';
 
-import { InputError, AccessError, } from './error';
-import { BACKEND_PORT } from '../../frontend/src/config';
-import swaggerDocument from '../swagger.json';
+import { InputError, AccessError } from './error.js';
+import config from '../../frontend/src/config.js';
 import {
   save,
   getUserIdFromAuthorization,
@@ -33,9 +32,10 @@ import {
   unpinMessage,
   reactMessage,
   unreactMessage,
-} from './service';
+} from './service.js';
 
 const app = express();
+const swaggerDocument = JSON.parse(fs.readFileSync('./swagger.json', 'utf8'));
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true, }));
@@ -103,10 +103,8 @@ app.get('/channel/:channelId', catchErrors(authed(async (req, res, authUserId) =
 })));
 
 app.post('/channel', catchErrors(authed(async (req, res, authUserId) => {
-  const { name, _, description, } = req.body;
-  return res.json({
-    channelId: await addChannel(authUserId, name, req.body.private, description),
-  });
+  const { name, private: priv, description, } = req.body;
+  return res.json({ channelId: await addChannel(authUserId, name, priv, description), });
 })));
 
 app.put('/channel/:channelId', catchErrors(authed(async (req, res, authUserId) => {
@@ -154,10 +152,10 @@ app.get('/user/:userId', catchErrors(authed(async (req, res, authUserId) => {
   return res.json(await getUser(userId));
 })));
 
-app.put('/user', catchErrors(authed(async (req, res, authUserId) => {
+app.put('/user/profile', catchErrors(authed(async (req, res, authUserId) => {
   const { email, password, name, bio, image, } = req.body;
   await updateProfile(authUserId, email, password, name, bio, image);
-  return res.status(200).send({});
+  return res.json({});
 })));
 
 /***************************************************************
@@ -232,7 +230,7 @@ app.get('/', (req, res) => res.redirect('/docs'));
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-const port = BACKEND_PORT || 5000;
+const port = config.BACKEND_PORT || 5000;
 
 const server = app.listen(port, () => {
   console.log(`Backend is now listening on port ${port}!`);

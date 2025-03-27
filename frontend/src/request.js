@@ -25,42 +25,54 @@ const handleResponse = (response) => {
   });
 };
 
-const get = (url) => {
-  return fetch(`${BASE_URL}${url}`, {
-    method: "GET",
-    headers: getHeaders(),
-  })
-    .then(handleResponse)
-    .catch((err) => toast(err.message, "error"));
+const get = async (url) => {
+  try {
+    const response = await fetch(`${BASE_URL}${url}`, {
+      method: "GET",
+      headers: getHeaders(),
+    });
+    return handleResponse(response);
+  } catch (err) {
+    return toast(err.message, "error");
+  }
 };
 
-const post = (url, data) => {
-  return fetch(`${BASE_URL}${url}`, {
-    method: "POST",
-    headers: getHeaders(),
-    body: JSON.stringify(data),
-  })
-    .then(handleResponse)
-    .catch((err) => toast(err.message, "error"));
+const post = async (url, data) => {
+  try {
+    const response = await fetch(`${BASE_URL}${url}`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+  } catch (err) {
+    return toast(err.message, "error");
+  }
 };
 
-const put = (url, data) => {
-  return fetch(`${BASE_URL}${url}`, {
-    method: "PUT",
-    headers: getHeaders(),
-    body: JSON.stringify(data),
-  })
-    .then(handleResponse)
-    .catch((err) => toast(err.message, "error"));
+const put = async (url, data) => {
+  try {
+    const response = await fetch(`${BASE_URL}${url}`, {
+      method: "PUT",
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+  } catch (err) {
+    return toast(err.message, "error");
+  }
 };
 
-const deleteRequest = (url) => {
-  return fetch(`${BASE_URL}${url}`, {
-    method: "DELETE",
-    headers: getHeaders(),
-  })
-    .then(handleResponse)
-    .catch((err) => toast(err.message, "error"));
+const deleteRequest = async (url) => {
+  try {
+    const response = await fetch(`${BASE_URL}${url}`, {
+      method: "DELETE",
+      headers: getHeaders(),
+    });
+    return handleResponse(response);
+  } catch (err) {
+    return toast(err.message, "error");
+  }
 };
 
 const http = {
